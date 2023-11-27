@@ -1,0 +1,13 @@
+gui:
+  sidePanelWidth: 0.20
+  showBottomLine: false
+  showCommandLog: false
+  theme:
+    selectedLineBgColor:
+      - default
+    selectedRangeBgColor:
+      - default
+    unstagedChangesColor:
+      - yellow
+git:
+  branchLogCmd: "git log --graph --color=always --abbrev-commit --decorate --date=relative --pretty=medium --oneline {{branchName}} --"
