@@ -9,6 +9,8 @@
 #
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
 
+exec --no-startup-id xrandr --output DisplayPort-1 --mode 3840x2160 --rate 60.00
+
 set $mod Mod4
 
 # Font for window titles. Will also be used by the bar unless a different font
@@ -61,10 +63,10 @@ bindsym $mod+d exec --no-startup-id dmenu_run
 # bindcode $mod+40 exec --no-startup-id i3-dmenu-desktop
 
 # change focus
-bindsym $mod+j focus left
-bindsym $mod+k focus down
-bindsym $mod+l focus up
-bindsym $mod+semicolon focus right
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left
@@ -73,10 +75,10 @@ bindsym $mod+Up focus up
 bindsym $mod+Right focus right
 
 # move focused window
-bindsym $mod+Shift+j move left
-bindsym $mod+Shift+k move down
-bindsym $mod+Shift+l move up
-bindsym $mod+Shift+semicolon move right
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Shift+Left move left
@@ -85,7 +87,7 @@ bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
 # split in horizontal orientation
-bindsym $mod+h split h
+bindsym $mod+g split h
 
 # split in vertical orientation
 bindsym $mod+v split v
@@ -148,7 +150,7 @@ bindsym $mod+Shift+9 move container to workspace number $ws9
 bindsym $mod+Shift+0 move container to workspace number $ws10
 
 # open workspace 1 on primary monitor, workspace 2 on secondary
-workspace 1 output primary
+workspace 1 output DVI-D-1
 workspace 2 output HDMI-A-2
 
 # reload the configuration file
@@ -190,3 +192,27 @@ bindsym $mod+r mode "resize"
 bar {
         status_command i3status
 }
+
+# exec --no-startup-id compton --config ~/.config/compton.conf 
+exec --no-startup-id picom --config ~/.config/picom/picom.conf -b
+# set background image using nitrogen
+#exec --no-startup-id nitrogen --set-auto ~/Downloads/oblivion-wallpaper.jpg --head=0
+exec --no-startup-id nitrogen --set-auto ~/Firefox_wallpaper.png --head=0
+
+# Screenshot keybinds:
+# Full Screen 	                Ctrl + PrtScrn
+# Selection 	                Ctrl + Shift + PrtScrn
+# Active Window 	            Ctrl + Super + PrtScrn
+# Clipboard Full Screen 	    Shift + PrtScrn
+# Clipboard Selection 	        PrtScrn
+# Clipboard Active Window 	    Super + PrtScrn
+
+##  Screenshots in clipboards
+bindsym Ctrl+Print exec --no-startup-id maim --format=png "/home/$USER/Pictures/screenshot-$(date -u +'%Y%m%d-%H%M%SZ')-all.png"
+bindsym Ctrl+Shift+Print exec --no-startup-id maim --format=png --window $(xdotool getactivewindow) "/home/$USER/Pictures/screenshot-$(date -u +'%Y%m%d-%H%M%SZ')-current.png"
+bindsym Ctrl+$mod+Print exec --no-startup-id maim --format=png --select "/home/$USER/Pictures/screenshot-$(date -u +'%Y%m%d-%H%M%SZ')-selected.png"
+
+## Screenshots in files
+bindsym Shift+Print exec --no-startup-id maim --format=png | xclip -selection clipboard -t image/png
+bindsym $mod+Print exec --no-startup-id maim --format=png --window $(xdotool getactivewindow) | xclip -selection clipboard -t image/png
+bindsym Print exec --no-startup-id maim --format=png --select | xclip -selection clipboard -t image/png

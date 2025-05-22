@@ -11,18 +11,43 @@ set number
 set hlsearch
 set ruler
 " set statusline=%f
-set tabline=%t
+" set tabline=%t
 " set laststatus=2
 set showtabline=2
 highlight Comment ctermfg=green
 set guioptions -=m
 set guioptions -=T
-colorscheme slate
-let g:airline#extensions#tabline#enabled = 1
 nnoremap H gT
 nnoremap L gt
-let g:airline#extensions#tabline#formatter = 'unique_tail'
-let g:airline#extensions#tabline#tabs_label = ''
-let g:airline#extensions#tabline#buffers_label = ''
-let g:airline#extensions#tabline#show_splits = 0 " let g:airline#extensions#tabline#exclude_buffers = 0 doesn't work
-" (https://github.com/vim-airline/vim-airline/blob/master/doc/airline.txt)
+" reload .vimrc: \rr
+nnoremap <Leader>rr :source $MYVIMRC<CR>
+" add mapping for auto closing
+" inoremap "<tab> ""<Left>
+" inoremap '<tab> ''<Left>
+" inoremap (<tab> ()<Left>
+" inoremap [<tab> []<Left>
+" inoremap {<tab> {}<Left>
+inoremap " ""<left>
+inoremap ' ''<left>
+inoremap ( ()<left>
+inoremap [ []<left>
+inoremap {<tab> {}<Left>
+inoremap {<CR> {<CR>}<ESC>O
+inoremap {;<CR> {<CR>};<ESC>O
+inoremap <C-h> <Left>
+inoremap <C-j> <Down>
+inoremap <C-k> <Up>
+inoremap <C-l> <Right>
+inoremap <C-c> <esc>
+" Use a line cursor within insert mode and a block cursor everywhere else.
+"
+" Reference chart of values:
+"   Ps = 0 -> blinking block
+"   Ps = 1 -> blinking block (default).
+"   Ps = 2 -> steady block
+"   Ps = 3 -> blinking underline
+"   Ps = 4 -> steady block
+"   Ps = 5 -> blinking bar (xterm).
+"   Ps = 6 -> steady bar (xterm).
+let &t_SI = "\e[5 q"
+let &t_EI = "\e[2 q"
