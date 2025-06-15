@@ -11,6 +11,11 @@
 
 exec --no-startup-id xrandr --output DisplayPort-1 --mode 3840x2160 --rate 60.00
 
+# Turn off screen saver
+exec --no-startup-id xset s off
+exec --no-startup-id xset -dpms
+
+
 set $mod Mod4
 
 # Font for window titles. Will also be used by the bar unless a different font
@@ -196,8 +201,9 @@ bar {
 # exec --no-startup-id compton --config ~/.config/compton.conf 
 exec --no-startup-id picom --config ~/.config/picom/picom.conf -b
 # set background image using nitrogen
-#exec --no-startup-id nitrogen --set-auto ~/Downloads/oblivion-wallpaper.jpg --head=0
 exec --no-startup-id nitrogen --set-auto ~/Firefox_wallpaper.png --head=0
+# Remap Caps Lock to CTRL
+exec --no-startup-id /usr/bin/setxkbmap -option "ctrl:nocaps"
 
 # Screenshot keybinds:
 # Full Screen 	                Ctrl + PrtScrn

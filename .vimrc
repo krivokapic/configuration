@@ -10,6 +10,10 @@ set ai
 set number
 set hlsearch
 set ruler
+set softtabstop=4
+set autoindent          " copy indent from current line when starting a new line
+" make backspaces more powerfull
+set backspace=indent,eol,start
 " set statusline=%f
 " set tabline=%t
 " set laststatus=2
@@ -22,11 +26,6 @@ nnoremap L gt
 " reload .vimrc: \rr
 nnoremap <Leader>rr :source $MYVIMRC<CR>
 " add mapping for auto closing
-" inoremap "<tab> ""<Left>
-" inoremap '<tab> ''<Left>
-" inoremap (<tab> ()<Left>
-" inoremap [<tab> []<Left>
-" inoremap {<tab> {}<Left>
 inoremap " ""<left>
 inoremap ' ''<left>
 inoremap ( ()<left>
