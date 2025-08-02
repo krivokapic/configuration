@@ -119,5 +119,4 @@ export PATH=$PATH:/usr/local/go/bin
 export PATH=/home/vladimirk/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/opt/nvim-linux64/bin:/usr/local/go/bin:/usr/local/go/bin/go
 export PATH="$PATH:$HOME/go/bin"
 export LC_TIME=en_US.utf8
-
-setxkbmap -option ctrl:nocaps
+export PATH="$HOME/.local/bin:$PATH"

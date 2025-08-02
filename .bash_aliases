@@ -6,7 +6,17 @@ alias sleep='sudo systemctl suspend'
 alias tldr='tldr -t ocean'
 alias update='sudo nala update && sudo nala upgrade -y && sudo nala autoremove --purge -y' # Nala package manager
 #alias update='sudo apt update && sudo apt upgrade -y && sudo apt autoremove --purge'# Apt package manager
-alias ls='ls -h --color=auto'
+alias ls='ls -lh --color=auto --group-directories-first'
 alias lg='lazygit'
 alias install="sudo nala install -y"
 alias py="python3"
+alias docs="cd ~/Documents"
+alias down="cd ~/Downloads"
+alias books="cd ~/Documents/books"
+alias pics="cd ~/Pictures/"
+alias v="vim"
+alias vol="pavucontrol"
+alias learn="cd ~/learn/algorithms"
+alias so="source ~/.bashrc"
+alias mkvenv="python3 -m venv .venv"
+alias ..="cd .."

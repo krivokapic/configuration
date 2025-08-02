@@ -1,0 +1,31 @@
+Create a script, e.g., ~/scripts/chat_popup.sh:
+
+#!/bin/bash
+
+# Launch Firefox with a unique window title/class
+firefox --new-window https://www.chat.com --class chatpopup &
+
+Make it executable:
+chmod +x ~/scripts/chat_popup.sh
+
+Edit your i3 config (~/.config/i3/config) and add this rule:
+for_window [class="chatpopup"] floating enable, move position center
+    This makes any window with the class "chatpopup" floating and centered.
+
+You can also add this optional line to give it a size:
+for_window [class="chatpopup"] resize set 800 600
+
+Optional: Bind a key to launch it
+
+Add this line to your i3 config to bind it to, for example, $mod+c:
+bindsym $mod+c exec ~/scripts/chat_popup.sh
+
+Reload i3:
+
+$mod+Shift+r
+
+Now when you press $mod+c, it will:
+
+    Open https://www.chat.com in Firefox,
+
+    The window will be floating and centered.

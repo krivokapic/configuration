@@ -155,8 +155,8 @@ bindsym $mod+Shift+9 move container to workspace number $ws9
 bindsym $mod+Shift+0 move container to workspace number $ws10
 
 # open workspace 1 on primary monitor, workspace 2 on secondary
-workspace 1 output DVI-D-1
-workspace 2 output HDMI-A-2
+# workspace 1 output DVI-D-1
+# workspace 2 output HDMI-A-2
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -173,10 +173,10 @@ mode "resize" {
         # Pressing right will grow the window’s width.
         # Pressing up will shrink the window’s height.
         # Pressing down will grow the window’s height.
-        bindsym j resize shrink width 10 px or 10 ppt
-        bindsym k resize grow height 10 px or 10 ppt
-        bindsym l resize shrink height 10 px or 10 ppt
-        bindsym semicolon resize grow width 10 px or 10 ppt
+        bindsym h resize shrink width 10 px or 10 ppt
+        bindsym j resize grow height 10 px or 10 ppt
+        bindsym k resize shrink height 10 px or 10 ppt
+        bindsym l resize grow width 10 px or 10 ppt
 
         # same bindings, but for the arrow keys
         bindsym Left resize shrink width 10 px or 10 ppt
@@ -201,7 +201,7 @@ bar {
 # exec --no-startup-id compton --config ~/.config/compton.conf 
 exec --no-startup-id picom --config ~/.config/picom/picom.conf -b
 # set background image using nitrogen
-exec --no-startup-id nitrogen --set-auto ~/Firefox_wallpaper.png --head=0
+exec --no-startup-id nitrogen --set-auto ~/Firefox_wallpaper.jpg --head=0
 # Remap Caps Lock to CTRL
 exec --no-startup-id /usr/bin/setxkbmap -option "ctrl:nocaps"
 
