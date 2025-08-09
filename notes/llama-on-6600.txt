@@ -1,0 +1,129 @@
+Running `llama.cpp` on an AMD 6600 GPU locally **is possible**, but it's not as straightforward as using an NVIDIA GPU with CUDA. Since `llama.cpp` primarily supports CPU execution, and optionally GPU via **OpenCL**, **Metal**, or **Vulkan**, your AMD 6600 GPU (which is RDNA2) can be used via **OpenCL** or **Vulkan**. Vulkan is usually more stable for AMD.
+
+---
+
+## ✅ Step-by-Step: Running `llama.cpp` on AMD 6600 GPU
+
+### 🛠️ Prerequisites
+
+1. **AMD GPU Drivers**:
+
+   * Install the latest **AMD GPU drivers** that include support for **OpenCL** and **Vulkan**.
+   * On Linux: Use `amdgpu-install` or install via your package manager.
+   * On Windows: Use the **Adrenalin** software from AMD.
+
+2. **System Requirements**:
+
+   * 8GB+ RAM recommended.
+   * Enough VRAM (6600 has 8GB, which is good for \~7B models).
+
+3. **Install Dependencies**:
+
+   * **CMake**
+   * **Make**
+   * **Python 3.8+** (optional, for model conversion)
+
+---
+
+### 🧰 Clone and Build `llama.cpp` with Vulkan or OpenCL
+
+#### 1. Clone the repo
+
+```bash
+git clone https://github.com/ggerganov/llama.cpp
+cd llama.cpp
+```
+
+#### 2. Build with OpenCL (or Vulkan)
+
+You have two options here:
+
+---
+
+### Option 1: OpenCL (more common, but slower and less stable than Vulkan)
+
+```bash
+cmake -B build -DLLAMA_CLBLAST=on
+cmake --build build --config Release
+```
+
+Then use the OpenCL backend by running:
+
+```bash
+./build/bin/main -m models/llama-2-7b.Q4_K_M.gguf -ngl 50
+```
+
+> `-ngl 50` means 50 layers offloaded to GPU. Adjust based on your GPU VRAM.
+
+---
+
+### Option 2: Vulkan (faster & better for AMD GPUs)
+
+#### a. Build with Vulkan support
+
+```bash
+cmake -B build -DLLAMA_VULKAN=on
+cmake --build build --config Release
+```
+
+#### b. Run with Vulkan backend
+
+```bash
+./build/bin/main -m models/llama-2-7b.Q4_K_M.gguf -ngl 50 --vulkan
+```
+
+> Use `--vulkan` to enable Vulkan. You might also need to specify Vulkan device if multiple GPUs are present.
+
+---
+
+## 📦 Download a GGUF Model
+
+You need to use models in the **`.gguf` format**. You can get them from:
+
+* [https://huggingface.co/TheBloke](https://huggingface.co/TheBloke)
+* Example for 7B model:
+
+  ```bash
+  wget https://huggingface.co/TheBloke/Llama-2-7B-GGUF/resolve/main/llama-2-7b.Q4_K_M.gguf
+  ```
+
+Place it in the `models/` directory.
+
+---
+
+## ✅ Run Example Command
+
+```bash
+./build/bin/main -m models/llama-2-7b.Q4_K_M.gguf -ngl 50 --vulkan
+```
+
+This command will:
+
+* Load the LLaMA 2 7B model
+* Use Vulkan GPU acceleration
+* Offload 50 layers to the GPU (adjust as needed)
+
+---
+
+## 🧪 Check Vulkan / OpenCL Devices (optional)
+
+You can use tools to check if your GPU is recognized:
+
+* `vulkaninfo` (Linux)
+* `clinfo` (for OpenCL)
+
+---
+
+## 🧠 Tips
+
+* Keep model quantized (Q4 or Q5) to save VRAM.
+* Start with a small number of layers offloaded (`-ngl 20`) and increase if stable.
+* Use `--prompt` or interactive mode for testing.
+
+---
+
+## 💬 Let Me Know
+
+If you're on **Linux or Windows**, or using **WSL**, the steps vary slightly—let me know and I can tailor the instructions.
+
+Would you like help writing a launch script or checking compatibility with your system?

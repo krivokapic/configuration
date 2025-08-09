@@ -1,0 +1,2 @@
+// first run 'xrandr' to get resolution and monitor input (here is 'DisplayPort-1')
+xrandr --output DisplayPort-1 --mode 2560x1440 --rate 165.00

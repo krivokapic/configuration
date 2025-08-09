@@ -1,0 +1,11 @@
+- csv format:
+    echo "id,name,age" > data.csv
+    for i in {1..1000}; do echo "$i,User_$i,$((20 + (i % 50)))" >> data.csv; done
+- sql script format:
+    // $RANDOM in bas generates a number 0 - 32767. $((RANDOM % 2000 + 1))) generates a random number between 1-2000
+    for i in {1..1000}; do echo "INSERT INTO sales (salesperson, region, sale_date, amount) VALUES ($i, 'Region_$i', 'Date_$i', $((RANDOM % 2000 + 1)));" >> insert.sql; done | bash
+- import rows:
+    sqlite3 <dbname>.db
+    begin;                  // open transaction, can speed up inserts
+    .read <name>.sql        // import the rows
+    commit;                 // commit transaction
