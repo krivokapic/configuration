@@ -1,0 +1,203 @@
+Nice—let’s make these feel simple and useful, not just abstract toys. I’ll give you the intuition, plain-language analogies, short examples, and a couple of small exercises you can try.
+
+# What a CTE (Common Table Expression) *really* is
+
+Think of a CTE as a **named, temporary sub-query** — like writing a mini spreadsheet tab with a name that you can reference in the rest of your query. It makes complex SQL readable by breaking it into steps.
+
+Analogy: if a query is a recipe, a CTE is “preparing an ingredient” (chop onions, simmer sauce) and giving it a name so the rest of the recipe reads clearly.
+
+Basic form:
+
+```sql
+WITH step1 AS (
+  -- a query that returns rows
+  SELECT ...
+),
+step2 AS (
+  -- another query that can use step1
+  SELECT ... FROM step1 ...
+)
+SELECT * FROM step2;
+```
+
+Why use CTEs?
+
+* readability: name intermediate results
+* reuse: reference the same result multiple times
+* composition: break problem into steps
+* recursive logic: express hierarchical or iterative queries (more on that below)
+
+# Short CTE example — clarity over cleverness
+
+Sample data (conceptual): `sales(id, salesperson, region, sale_date, amount)`
+
+We want region totals and then the top 2 sales rows in each region by amount.
+
+```sql
+WITH region_totals AS (
+  SELECT region, SUM(amount) AS region_total
+  FROM sales
+  GROUP BY region
+),
+ranked_sales AS (
+  SELECT
+    s.*,
+    rt.region_total,
+    ROW_NUMBER() OVER (PARTITION BY s.region ORDER BY s.amount DESC) AS rn
+  FROM sales s
+  JOIN region_totals rt USING (region)
+)
+SELECT * FROM ranked_sales WHERE rn <= 2;
+```
+
+What happened:
+
+1. `region_totals` computes totals — like making a small table.
+2. `ranked_sales` combines per-row data with the totals and ranks rows per region.
+3. Final `SELECT` picks the top 2 per region.
+
+# Window functions — the core idea
+
+Window functions compute aggregates **without collapsing rows**. You get an aggregate *value* for each row based on a “window” of rows related to that row.
+
+Analogy: suppose you have a ledger and for each line item you want to write the running balance on that same line — window functions let you write that extra column without folding rows together.
+
+Key parts:
+
+* `OVER(...)` is mandatory and defines the window.
+* `PARTITION BY` splits rows into groups (like GROUP BY boundaries), but does **not** collapse rows.
+* `ORDER BY` inside `OVER()` defines ordering for running aggregates, ranks, and frames.
+* Frame clause (`ROWS BETWEEN ...`) controls exactly which rows in the partition the function sees (useful for moving averages, running totals).
+
+Common examples:
+
+* ranking: `ROW_NUMBER(), RANK(), DENSE_RANK()`
+* offsets: `LAG(), LEAD()`
+* aggregates per row: `SUM() OVER(...)`, `AVG() OVER(...)`, `COUNT() OVER(...)`
+* statistical: `PERCENT_RANK(), CUME_DIST()`
+
+# Concrete window examples (step-by-step)
+
+Assume simplified `sales` table rows:
+
+| id | salesperson | region | sale\_date | amount |
+| -- | ----------- | ------ | ---------- | ------ |
+| 1  | Ana         | East   | 2025-01-01 | 100    |
+| 2  | Bob         | East   | 2025-01-05 | 200    |
+| 3  | Ana         | East   | 2025-01-07 | 150    |
+| 4  | Cam         | West   | 2025-01-02 | 300    |
+
+1. **Region total on each row**
+
+```sql
+SELECT
+  *,
+  SUM(amount) OVER (PARTITION BY region) AS region_total
+FROM sales;
+```
+
+Result: each sale row gets a `region_total`. Rows remain; no aggregation collapse.
+
+2. **Running total over time (global)**
+
+```sql
+SELECT
+  *,
+  SUM(amount) OVER (ORDER BY sale_date
+                    ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+    AS running_total
+FROM sales;
+```
+
+Each row’s `running_total` is the cumulative sum up to that date.
+
+3. **Rank sales within each region**
+
+```sql
+SELECT
+  *,
+  ROW_NUMBER() OVER (PARTITION BY region ORDER BY amount DESC) AS rn
+FROM sales;
+```
+
+`rn = 1` is the largest sale in that region. Unlike GROUP BY, every sale row is preserved with its rank.
+
+4. **Compare this month’s amount to previous sale for same salesperson**
+
+```sql
+SELECT
+  *,
+  LAG(amount, 1) OVER (PARTITION BY salesperson ORDER BY sale_date) AS prev_amount
+FROM sales;
+```
+
+`LAG` gives the previous row’s value in the salesperson partition.
+
+# GROUP BY vs Window functions — pick the right tool
+
+* `GROUP BY` aggregates and **reduces** rows (one row per group).
+* Window functions keep **all rows**, adding columns computed over a window.
+
+Use GROUP BY when you only need aggregated rows (totals per group). Use window functions when you need per-row detail *plus* aggregate context (percent of total, running sum, rank, comparison to neighbor rows).
+
+# Recursive CTEs — the intuition
+
+A recursive CTE is a way to **repeat a step until a condition** — like a loop in SQL. Great for:
+
+* hierarchical data (org chart, folder tree)
+* generating series (dates)
+* iterative calculations
+
+Structure:
+
+```sql
+WITH RECURSIVE t AS (
+  -- anchor member
+  SELECT ... FROM ... WHERE ...
+  UNION ALL
+  -- recursive member: references t
+  SELECT ... FROM t JOIN ... WHERE ...
+)
+SELECT * FROM t;
+```
+
+Example: walk an `employees(id, name, manager_id)` tree from CEO downward:
+
+```sql
+WITH RECURSIVE team AS (
+  SELECT id, name, manager_id, 1 AS depth
+  FROM employees
+  WHERE id = 1   -- CEO start
+
+  UNION ALL
+
+  SELECT e.id, e.name, e.manager_id, t.depth + 1
+  FROM employees e
+  JOIN team t ON e.manager_id = t.id
+)
+SELECT * FROM team;
+```
+
+This returns the CEO, then all direct reports, then their reports, etc., with `depth`.
+
+# Practical tips and pitfalls
+
+* CTEs are primarily for readability; the optimizer may inline them in many DBs (not always materialized).
+* Use window functions to avoid expensive self-joins for running sums or ranks.
+* Ordering matters: `ORDER BY` inside `OVER()` affects running aggregates and ranks.
+* Be careful with frames: default for `SUM() OVER (ORDER BY ...)` can differ by DB — explicit `ROWS BETWEEN` is safer for precise control.
+* Large partitions or wide frames can be costly — watch performance and indexes.
+* Some DBs (older MySQL) had limited window function support — check your engine/version.
+
+# Short exercises (try these)
+
+1. For each salesperson, list their total sales and each sale row showing “percent of their total” (answer hint: window `SUM(amount) OVER (PARTITION BY salesperson)`).
+2. Show the top 3 sales per region (hint: use `ROW_NUMBER() OVER (PARTITION BY region ORDER BY amount DESC)` inside a CTE or subquery).
+3. Given an `orders(order_date, amount)`, compute a 7-day moving average (hint: `AVG(amount) OVER (ORDER BY order_date ROWS BETWEEN 6 PRECEDING AND CURRENT ROW)`).
+
+If you want, I can write answers for those and run through the exact output rows for a small data sample.
+
+---
+
+Want me to: (A) show the full SQL for the exercises with example data and result tables, (B) show a recursive CTE example with a tree and visualized output, or (C) give performance & explainers specific to Postgres / MySQL / SQL Server?
+
