@@ -1,0 +1,6 @@
+- donwload the latest release:
+    https://sqlite.org/src/tarball/sqlite.tar.gz?r=release
+- run configure:
+    ../sqlite/configure --enable-all
+- build sqlite3 cmd tool:
+    make sqlite3
