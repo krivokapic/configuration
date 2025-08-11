@@ -235,3 +235,8 @@ bindsym $mod+z move scratchpad
 
 # Show the first scratchpad window
 bindsym $mod+x scratchpad show
+
+# Launch Firefox
+bindsym $mod+b exec --no-startup-id firefox
+# Launch Private Firefox
+bindsym $mod+p exec --no-startup-id firefox --private-window
