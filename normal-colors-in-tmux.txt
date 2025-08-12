@@ -1,0 +1,4 @@
+in .tmux.conf:
+    - set -g default-terminal "screen-256color"
+in .vimrc:
+    - set background=dark
