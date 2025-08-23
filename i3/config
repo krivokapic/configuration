@@ -173,10 +173,10 @@ mode "resize" {
         # Pressing right will grow the window’s width.
         # Pressing up will shrink the window’s height.
         # Pressing down will grow the window’s height.
-        bindsym j resize shrink width 10 px or 10 ppt
-        bindsym k resize grow height 10 px or 10 ppt
-        bindsym l resize shrink height 10 px or 10 ppt
-        bindsym semicolon resize grow width 10 px or 10 ppt
+        bindsym h resize shrink width 10 px or 10 ppt
+        bindsym j resize grow height 10 px or 10 ppt
+        bindsym k resize shrink height 10 px or 10 ppt
+        bindsym l resize grow width 10 px or 10 ppt
 
         # same bindings, but for the arrow keys
         bindsym Left resize shrink width 10 px or 10 ppt
@@ -199,8 +199,7 @@ bar {
 }
 
 # exec --no-startup-id compton --config ~/.config/compton.conf 
-# exec --no-startup-id picom --config ~/.config/picom/picom.conf -b
-exec --no-startup-id picom -f --backend xrender --experimental-backends
+exec --no-startup-id picom --config ~/.config/picom/picom.conf -b
 # set background image using nitrogen
 exec --no-startup-id nitrogen --set-auto ~/Firefox_wallpaper.jpg --head=0
 # Remap Caps Lock to CTRL
@@ -224,11 +223,17 @@ bindsym Shift+Print exec --no-startup-id maim --format=png | xclip -selection cl
 bindsym $mod+Print exec --no-startup-id maim --format=png --window $(xdotool getactivewindow) | xclip -selection clipboard -t image/png
 bindsym Print exec --no-startup-id maim --format=png --select | xclip -selection clipboard -t image/png
 
-# Launch ChatGPT in a floating window as a webb app with chromium
+# Launch ChatGPT in a floating window as a web app with chromium
 bindsym $mod+c exec --no-startup-id chromium --class=chatgpt-float --new-window --app=https://chat.openai.com
 
-# Floating window class used by Launch ChatGPT keybind
+# Launch Gmail in a floating window as a web app with Firefox
+bindsym $mod+m exec --no-startup-id chromium --class=chatgpt-float --new-window --app=https://mail.google.com
+
+# Floating window class used by Launch ChatGPT, Firefox keybinds
 for_window [class="chatgpt-float"] floating enable, border pixel 1, resize set 80 ppt 80 ppt, move position center
+
+# Floating window class used by Launch ChatGPT, Firefox keybinds
+for_window [class="Pavucontrol"] floating enable, border pixel 1, resize set 30 ppt 30 ppt, move position center
 
 # Make currently focused window a scratchpad
 bindsym $mod+z move scratchpad
