@@ -35,6 +35,10 @@ nnoremap L gt
 nnoremap <C-l> :tabmove +1<CR>
 nnoremap <C-h> :tabmove -1<CR>
 nnoremap <C-s> :wa<CR>
+vnoremap <C-y> "+y<CR>
+nnoremap <C-p> "+p<CR>
+nnoremap <C-u> <C-u>zz
+nnoremap <C-d> <C-d>zz
 # open fzf (all files)
 nnoremap <Leader><SPACE> :Files<CR>
 # open fzf (git files)
