@@ -20,7 +20,8 @@ vim.lsp.enable({
     "lua_ls", "clangd",
 })
 
-vim.diagnostic.config({ virtual_lines = true })
+-- Show LSP warnings inline
+--vim.diagnostic.config({ virtual_lines = true })
 vim.diagnostic.config({ virtual_text = true })
 
 -- this is to disable lua LSP warnings on 'vim' and 'require'
