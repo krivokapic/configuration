@@ -2,11 +2,15 @@ local map = vim.keymap.set
 
 map({ "n", "v", "x" }, "<leader>o", "<Cmd>source %<CR>", { desc = "Source nvim config" .. vim.fn.expand("$MYVIMRC") })
 map({ "v", "x", "n" }, "<C-y>", '"+y', { desc = "System clipboard yank." })
+map({ "n" }, "<C-p>", '"+p<CR>', { desc = "System clipboard yank." })
+map({ "i" }, "<C-p>", '<C-r>+', { desc = "System clipboard yank." })
 map({ "i", "v" }, "<C-c>", "<Esc>", { noremap = true, silent = true })
 map({ "n", "v", "x" }, "<C-s>", [[:s/\V]], { desc = "Enter substitue mode in selection" })
 map({ "n", "v", "x" }, "<leader>lf", vim.lsp.buf.format, { desc = "Format current buffer" })
 map({ "n" }, "<leader>e", "<cmd>Oil --float<CR>", { desc = "Format current buffer" })
 map({ "n" }, "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
+map({ "n" }, "<leader>gd", vim.lsp.buf.definition, { desc = "Go to definition" })
+map({ "n" }, "<leader>k", vim.lsp.buf.signature_help, { desc = "Show function signature" })
 
 
 map("n", "L", 'gt')
@@ -29,8 +33,8 @@ map("i", "<C-l>", '<Right>')
 map("i", "<C-h>", '<Left>')
 map("i", "<C-j>", '<Up>')
 map("i", "<C-k>", '<Down>')
-map("i", "]q", '<Cmd>cn<CR>')
-map("i", "[q", '<Cmd>cn<CR>')
+map("n", "]q", '<Cmd>cn<CR>')
+map("n", "[q", '<Cmd>cn<CR>')
 map("n", "<C-d>", '<C-d>zz')
 map("n", "<C-u>", '<C-u>zz')
 

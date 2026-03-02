@@ -17,7 +17,7 @@ vim.opt.rtp:prepend(lazypath)
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 vim.lsp.enable({
-    "lua_ls", "clangd",
+    "lua_ls", "clangd", "pyright", "prettier", "gopls", "templ"
 })
 
 -- Show LSP warnings inline

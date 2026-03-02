@@ -8,6 +8,10 @@ return {
             servers = {
                 lua_ls = {},
                 clangd = {},
+                pyright = {},
+                prettier = {},
+                gopls = {},
+                templ = {},
             }
         },
         config = function(_, opts)
