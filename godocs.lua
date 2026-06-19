@@ -20,7 +20,6 @@ local function get_go_modules()
     return modules
 end
 
--- Formats data cleanly into compiler format (filename.go:line:signature)
 local function get_module_methods(module_rel_path)
     local items = {}
     local full_dir_path = GO_SRC_ROOT .. "\\" .. module_rel_path:gsub("/", "\\")
