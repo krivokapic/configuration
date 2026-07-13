@@ -7,10 +7,10 @@ local function get_go_modules()
     local function traverse(dir_path, current_prefix)
         for name, type in vim.fs.dir(dir_path) do
             if type == 'directory' then
-                if name ~= "vendor" and name ~= "cmd" and name ~= "test" and name ~= "internal" and name ~= "builtin" then
+                if name ~= "vendor" and name ~= "cmd" and name ~= "test" and name ~= "testdata" and name ~= "internal" and name ~= "builtin" then
                     local rel_path = current_prefix == "" and name or (current_prefix .. "/" .. name)
                     table.insert(modules, rel_path)
-                    traverse(dir_path .. "\\" .. name, rel_path)
+                    traverse(dir_path .. "/" .. name, rel_path)
                 end
             end
         end
@@ -23,8 +23,8 @@ end
 local function get_module_methods(module_rel_path)
     local items = {}
     local full_dir_path = GO_SRC_ROOT .. "/" .. module_rel_path -- :gsub("/", "\\")
-    if vim.fn.isdirectory(full_dir_path) == 0 then return items end
-
+    local module_dir = vim.uv.fs_stat(full_dir_path)
+    if module_dir and module_dir.type ~= "directory" then return items end
     for name, type in vim.fs.dir(full_dir_path) do
         if type == 'file' and name:match("%.go$") and not name:match("_test%.go$") then
             local file_path = full_dir_path .. "/" .. name
@@ -46,6 +46,7 @@ local function get_module_methods(module_rel_path)
     end
     return items
 end
+
 
 function M.browse_go_doc()
     local fzf_status, fzf = pcall(require, "fzf-lua")
