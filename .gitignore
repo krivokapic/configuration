@@ -1,5 +1,3 @@
-.json
-nvim-old/.neoconf.json
-nvim-old/lazy-lock.json
-nvim-old/lazyvim.json
-nvim-old/nvim/lazy-lock.json
+*.json
+*.pass
+*.fossil
